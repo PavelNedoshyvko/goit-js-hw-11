@@ -1,7 +1,7 @@
 import { serviceImages } from "./img-api";
 import { createMarkup } from "./markup";
 import { refs } from "./refs";
-import { notifyInfo } from "./notifys";
+import { notifyEndOfGalleryInfo, notifyNoImagesInfo } from "./notifications";
 
 export { onFormSubmit, onbtnLoadMoreClick };
 	
@@ -20,10 +20,12 @@ async function onFormSubmit(evt) {
 		const data = await serviceImages(searchQuery, page);
 		const { data: { hits } } = data;
 		if (hits.length === 0) {
-			notifyInfo();
+			notifyNoImagesInfo();
+			return;
 		}
 		refs.gallery.innerHTML = createMarkup(hits);
-		hits.map((item) => totalImages.push(item));
+		hits.map((img) => totalImages.push(img));
+		console.log(totalImages.length);
 		refs.btnLoadMore.classList.remove('is-hidden');
 	} catch (err) {
     console.log(err);
@@ -37,13 +39,15 @@ async function onbtnLoadMoreClick() {
 	try {
 		const data = await serviceImages(searchQuery, page);
 		const { data: { hits, totalHits } } = data;
-		hits.map((item) => totalImages.push(item));
+		hits.map((img) => totalImages.push(img));
+		console.log(totalImages.length);
 		if (hits.length === 0) {
-			notifyInfo();
+			notifyNoImagesInfo();
+			return;
 		}
 		refs.gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
 		if (totalImages.length >= totalHits) {
-			console.log("We're sorry, but you've reached the end of search results.");
+			notifyEndOfGalleryInfo();
 			return;
 		}
 		refs.btnLoadMore.classList.remove('is-hidden');
