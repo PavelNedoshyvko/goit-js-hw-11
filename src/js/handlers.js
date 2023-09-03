@@ -57,7 +57,6 @@ async function onbtnLoadMoreClick() {
 			notifyTotalHitsImagesSuccess(totalHits);
 		};
 		refs.btnLoadMore.classList.remove('is-hidden');
-		const cardStyle = getComputedStyle(document.querySelector('.photo-card'));
 		const { height: cardHeight } = refs.gallery.firstElementChild.getBoundingClientRect();
 		window.scrollBy({
 			top: cardHeight * 2,
