@@ -1,7 +1,9 @@
 import { serviceImages } from "./img-api";
 import { createMarkup } from "./markup";
 import { refs } from "./refs";
-import { notifyEndOfGalleryInfo, notifyNoImagesInfo } from "./notifications";
+import { notifyEndOfGalleryInfo, notifyNoImagesWarning, notifyTotalHitsImagesSuccess } from "./notifications";
+import { scrollToTop } from "./scroll-up";
+import { galleryLightbox } from "./simple-lightbox";
 
 export { onFormSubmit, onbtnLoadMoreClick };
 	
@@ -15,17 +17,18 @@ async function onFormSubmit(evt) {
 	evt.currentTarget.searchQuery.onchange = () => {
 		page = 1;
 		totalImages = [];
+		scrollToTop();
 	}
 	try {
 		const data = await serviceImages(searchQuery, page);
 		const { data: { hits } } = data;
 		if (hits.length === 0) {
-			notifyNoImagesInfo();
+			notifyNoImagesWarning();
 			return;
 		}
 		refs.gallery.innerHTML = createMarkup(hits);
+		galleryLightbox.refresh();
 		hits.map((img) => totalImages.push(img));
-		console.log(totalImages.length);
 		refs.btnLoadMore.classList.remove('is-hidden');
 	} catch (err) {
     console.log(err);
@@ -40,17 +43,26 @@ async function onbtnLoadMoreClick() {
 		const data = await serviceImages(searchQuery, page);
 		const { data: { hits, totalHits } } = data;
 		hits.map((img) => totalImages.push(img));
-		console.log(totalImages.length);
 		if (hits.length === 0) {
-			notifyNoImagesInfo();
+			notifyNoImagesWarning();
 			return;
 		}
 		refs.gallery.insertAdjacentHTML('beforeend', createMarkup(hits));
-		if (totalImages.length >= totalHits) {
+		galleryLightbox.refresh();
+		if (totalImages.length > totalHits) {
 			notifyEndOfGalleryInfo();
 			return;
 		}
+		if (totalImages.length !== totalHits) {
+			notifyTotalHitsImagesSuccess(totalHits);
+		};
 		refs.btnLoadMore.classList.remove('is-hidden');
+		const cardStyle = getComputedStyle(document.querySelector('.photo-card'));
+		const { height: cardHeight } = refs.gallery.firstElementChild.getBoundingClientRect();
+		window.scrollBy({
+			top: cardHeight * 2,
+			behavior: "smooth",
+		});
 	} catch (err) {
     console.log(err);
 	}

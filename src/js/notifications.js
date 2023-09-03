@@ -1,8 +1,8 @@
 import { Notify } from "notiflix";
-export { notifyNoImagesInfo, notifyEndOfGalleryInfo };
+export { notifyNoImagesWarning, notifyEndOfGalleryInfo, notifyTotalHitsImagesSuccess };
 
-function notifyNoImagesInfo() {
-	Notify.info(
+function notifyNoImagesWarning() {
+	Notify.warning(
 		"Sorry, there are no images matching your search query. Please try again.",
 		{
 		width: '700px',
@@ -15,8 +15,17 @@ function notifyEndOfGalleryInfo() {
 	Notify.info(
 		"We're sorry, but you've reached the end of search results.",
 		{
-		width: '700px',
+		width: '750px',
 		fontSize: '26px',
 		position: 'center-center',
 	});
-}
+};
+
+function notifyTotalHitsImagesSuccess(totalHits) {
+	Notify.success(`Hooray! We found ${totalHits} images."`,
+	{
+		width: '350px',
+		fontSize: '18px',
+	});
+};
+
