@@ -30,6 +30,7 @@ async function onFormSubmit(evt) {
 			notifyNoImagesWarning();
 			return;
 		}
+		scrollToTop();
 		refs.gallery.innerHTML = createMarkup(hits);
 		galleryLightbox.refresh();
 		notifyTotalHitsImagesSuccess(totalHits);
@@ -39,7 +40,6 @@ async function onFormSubmit(evt) {
 			return;
 		};
 		refs.btnLoadMore.classList.remove('is-hidden');
-		scrollToTop();
 	} catch (err) {
     console.log(err);
 	};
