@@ -1,5 +1,15 @@
 import { Notify } from "notiflix";
-export { notifyNoImagesWarning, notifyEndOfGalleryInfo, notifyTotalHitsImagesSuccess };
+export { notifyFillInFieldWarning, notifyNoImagesWarning, notifyEndOfGalleryInfo, notifyTotalHitsImagesSuccess };
+
+function notifyFillInFieldWarning() {
+	Notify.warning(
+		"Please fill in the search field.",
+		{
+		width: '400px',
+		fontSize: '26px',
+		position: 'center-center',
+	});
+};
 
 function notifyNoImagesWarning() {
 	Notify.warning(
@@ -26,6 +36,7 @@ function notifyTotalHitsImagesSuccess(totalHits) {
 	{
 		width: '350px',
 		fontSize: '18px',
+		position: 'right-top',
 	});
 };
 

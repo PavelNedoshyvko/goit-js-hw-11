@@ -13,5 +13,6 @@ async function serviceImages(searchQuery, page = 1) {
 		page,
 		per_page: 40,
 	});
-	return await axios(`?${params}`);
+	const { data } = await axios(`?${params}`);
+	return data;
 }
